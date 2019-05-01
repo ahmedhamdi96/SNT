@@ -13,7 +13,17 @@ module.exports = (passport, config) => {
 
   passport.deserializeUser((id, done) => {
     User.findOne({ _id: id }, (err, user) => {
-      done(err, user);
+      current_user = new User(
+        { _id: user._id,
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          username: user.username,
+          token: user.token,
+          following: user.following,
+          followers: user.followers 
+        })
+      done(err, current_user);
     });
   });
 
@@ -32,6 +42,9 @@ module.exports = (passport, config) => {
           if (!user) {
             return done(null, false, { message: "Unknown user" });
           }
+          if(user.token){
+            return done(null, false, { message: "The user is already logged-in" });
+            }
           check = user.comparePassword(user.hashedPassword, password);
           if (check) {
             returned_user = {
