@@ -1,9 +1,13 @@
+require("dotenv").config();
 const createPagination = require("./analytics").createPagination;
 const mongoose = require("mongoose");
 const Activity = mongoose.model("Activity");
 const Chat = mongoose.model("Chat");
 const User = mongoose.model("User");
 const logger = require("../middlewares/logger");
+const crypto = require('crypto');
+const key = process.env.key;
+
 
 exports.chat = (req, res, next, id) => {
   Chat.load(id, (err, chat) => {
@@ -49,6 +53,8 @@ exports.index = (req, res) => {
     });
 };
 
+
+ 
 exports.show = (req, res) => {
   res.send(req.chat);
 };
@@ -60,6 +66,14 @@ exports.getChat = (req, res) => {
   let chats;
   Chat.list(options).then(result => {
     chats = result;
+    for(var i=0; i<chats.length; i++) {
+
+      var decrypt = crypto.createDecipheriv('des-ede3', key, "");
+      var s = decrypt.update(chats[i].message, 'base64', 'utf8');
+      chats[i].message = s + decrypt.final('utf8');
+
+    }
+    console.log(chats)
     res.render("chat/chat", { chats: chats });
   });
 };
@@ -72,11 +86,17 @@ exports.create = (req, res) => {
     user &&
     user.isAuthenticated(user.token, user._id)
   ) {
-
+    // var x = encrypt(req.body.body)
+    var encrypt = crypto.createCipheriv('des-ede3', key, "");
+    var theCipher = encrypt.update(req.body.body, 'utf8', 'base64');
+    theCipher += encrypt.final('base64');
+    console.log(theCipher)
     const chat = new Chat({
-      message: req.body.body,
+      
+      message: theCipher,
       receiver: req.body.receiver,
       sender: req.user.id
+      // encryptionObject: x 
     });
     logger.info("chat instance", chat);
     chat.save(err => {
