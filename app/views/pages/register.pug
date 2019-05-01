@@ -1,0 +1,31 @@
+extends ../layouts/default
+
+block content
+  .register.container
+    .row
+      .col-md-6.col-md-offset-3
+        h1.display-4.m-b-2 Sign Up
+
+        if (errors)
+          .fade.in.alert.alert-block.alert-error
+          a.close(data-dismiss="alert")
+          ul
+            each error in errors
+              li= error
+        br
+        br
+        // register form
+        form(method='POST' action='/register')
+          div.form-group
+            label(for='name') Name:
+            input#name.form-control(type='text', placeholder='first and last' name='name')
+          div.form-group
+            label(for='email') Email:
+            input#email.form-control(type='email', placeholder='name@email.com' name='email')
+          div.form-group
+            label(for='username') Username:
+            input#username.form-control(type='text', placeholder='Choose a unique username' name='username')
+          div.form-group
+            label(for='pw') Password:
+            input#pw.form-control(type='password' name='password')
+          button.btn.btn-primary(type='submit') Sign up
