@@ -1,5 +1,5 @@
-# Secure Node Twitter
-*CSEN1001 Project*
+# SNT
+*Secure Node Twitter*
 
 ## Project Overview
 *GUC, Spring 2019, CSEN1001*
