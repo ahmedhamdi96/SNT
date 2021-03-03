@@ -41,7 +41,7 @@
     "passport-google-oauth": "latest",
     "passport-local": "latest",
     "passport-twitter": "~1.0.2",
-    "pug": "^2.0.0-rc.4",
+    "pug": "^3.0.1",
     "raven": "^2.1.2",
     "serve-favicon": "^2.4.5",
     "underscore": "latest",
